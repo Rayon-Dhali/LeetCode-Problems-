@@ -1,0 +1,79 @@
+package cps688.lab1;
+
+/**
+ *
+ * @author rayon
+ */
+
+import java.util.*;
+
+
+public class Graph {
+    private int vertices; // Stores the number of vertices in the graph
+    private LinkedList<Integer>[] adjList; // Array of linked lists to represent the adjacency list
+
+    public Graph(int v) { // Constructor to initialize the graph with 'v' vertices
+        this.vertices = v; // Set the number of vertices
+        adjList = new LinkedList[v]; // Create an array of LinkedList to store adjacency info
+        for (int i = 0; i < v; i++) { // Loop through each vertex
+            adjList[i] = new LinkedList<>(); // Initialize an empty list for each vertex
+        }
+    }
+
+    public void addEdge(int a, int b) { // Method to add an edge between vertex 'a' and vertex 'b' returns # of neighbours for a given vertex 
+        adjList[a].add(b); // Add 'b' to the adjacency list of 'a'
+        adjList[b].add(a); // Add 'a' to the adjacency list of 'b' (undirected graph)
+    }
+
+    public int degreeVertex(int a) { // Method to return the degree of vertex 'a'
+        return adjList[a].size(); // The degree is the number of adjacent vertices (list size)
+    }
+
+    public void printAdjVertices(int a) { // Method to print all adjacent vertices of vertex 'a'
+        System.out.print("Adjacent vertices of " + a + ": "); // Print prefix
+        for (int neighbor : adjList[a]) { // Iterate through all neighbors of 'a'
+            System.out.print(neighbor + " "); // Print each adjacent vertex
+        }
+        System.out.println(); // Print a newline after listing all neighbors
+    }
+
+    public void BFS(int start) { // Method to perform Breadth-First Search starting from 'start'
+        boolean[] visited = new boolean[vertices]; // Boolean array to track visited vertices
+        Queue<Integer> queue = new LinkedList<>(); // Queue to manage BFS traversal order
+
+        visited[start] = true; // Mark the starting vertex as visited
+        queue.add(start); // Add the starting vertex to the queue
+
+        System.out.print("BFS Traversal: "); // Print label for BFS output
+        while (!queue.isEmpty()) { // Loop until the queue is empty
+            int node = queue.poll(); // Remove and return the front of the queue
+            System.out.print(node + " "); // Print the current node
+
+            for (int neighbor : adjList[node]) { // Iterate through neighbors of current node
+                if (!visited[neighbor]) { // If the neighbor hasn't been visited yet
+                    visited[neighbor] = true; // Mark neighbor as visited
+                    queue.add(neighbor); // Add neighbor to the queue
+                }
+            }
+        }
+        System.out.println(); // Print a newline after traversal
+    }
+
+    public void DFS(int start) { // Method to perform Depth-First Search starting from 'start'
+        boolean[] visited = new boolean[vertices]; // Boolean array to track visited vertices
+        System.out.print("DFS Traversal: "); // Print label for DFS output
+        dfsUtil(start, visited); // Call recursive DFS helper method
+        System.out.println(); // Print a newline after traversal
+    }
+
+    private void dfsUtil(int node, boolean[] visited) { // Helper method for recursive DFS
+        visited[node] = true; // Mark the current node as visited
+        System.out.print(node + " "); // Print the current node
+
+        for (int neighbor : adjList[node]) { // Iterate through all neighbors of the current node
+            if (!visited[neighbor]) { // If a neighbor hasn't been visited
+                dfsUtil(neighbor, visited); // Recursively visit the neighbor
+            }
+        }
+    }
+}
